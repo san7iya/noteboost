@@ -33,25 +33,25 @@ export const ThreatCard = ({
   const isHigh = riskScore >= 0.75;
   const isMed = riskScore >= 0.4 && riskScore < 0.75;
   const verdictTone = analysis?.verdict?.toLowerCase() === 'malicious' ? 'border-red-500/60 text-red-300' : 'border-emerald-500/60 text-emerald-300';
-  const triageMock = {
-    verdict: analysis?.verdict ?? 'Safe',
-    confidence: analysis?.confidence ?? 0.94,
-    summary: analysis?.explanation ?? 'No coordinated attack indicators were detected in the payload. Language and links remain within normal thresholds.',
+  const triageData = {
+    verdict: analysis?.verdict ?? (isHigh ? 'Malicious' : isMed ? 'Suspect' : 'Safe'),
+    confidence: analysis?.confidence ?? riskScore,
+    summary: analysis?.explanation ?? text,
     analysis_points: [
       {
-        title: 'Language Sentiment Stable',
-        desc: 'Sentiment volatility remains within the baseline range for normal posts.',
-        status: 'ok'
+        title: 'Sentiment Signal',
+        desc: `S-score at ${s_val.toFixed(2)} indicates ${s_val >= 0.6 ? 'heightened' : 'stable'} sentiment volatility.`,
+        status: s_val >= 0.6 ? 'warn' : 'ok'
       },
       {
-        title: 'Propagation Velocity Normal',
-        desc: 'Engagement growth does not indicate coordinated amplification.',
-        status: 'ok'
+        title: 'Propagation Velocity',
+        desc: `V-score at ${v_val.toFixed(2)} suggests ${v_val >= 0.6 ? 'accelerated' : 'normal'} spread velocity.`,
+        status: v_val >= 0.6 ? 'warn' : 'ok'
       },
       {
-        title: 'Evidence Links Benign',
-        desc: 'Referenced domains do not match known threat intelligence feeds.',
-        status: 'ok'
+        title: 'Evidence Density',
+        desc: `E-score at ${e_val.toFixed(2)} indicates ${e_val >= 0.6 ? 'link-heavy' : 'low'} evidence density.`,
+        status: e_val >= 0.6 ? 'ok' : 'warn'
       }
     ],
     sources: ['X Signal', 'NoteBoost RAG', 'Threat Intel Cache']
@@ -150,7 +150,7 @@ export const ThreatCard = ({
           )}
           {analysis && (
             <div className="mt-4">
-              <GeminiTriagePanel key={analysis.explanation} data={triageMock} />
+              <GeminiTriagePanel key={analysis.explanation} data={triageData} />
             </div>
           )}
         </div>
