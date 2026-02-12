@@ -69,8 +69,8 @@ Threats are prioritized using our proprietary risk formula:
 ### **1. Clone the Repository**
 
 ```bash
-git clone https://github.com/yourusername/noteboost-sentinel.git
-cd noteboost-sentinel
+git clone https://github.com/yourusername/noteboost.git
+cd noteboost
 
 ```
 
